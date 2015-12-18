@@ -1,6 +1,5 @@
 package ru.fizteh.fivt.students.oshch.collectionquery;
 
-
 import junit.framework.TestCase;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,9 +12,6 @@ import java.util.function.Function;
 
 import static ru.fizteh.fivt.students.oshch.collectionquery.CollectionsQL.Student.student;
 
-/**
- * Created by User on 11.11.2015.
- */
 @RunWith(MockitoJUnitRunner.class)
 public class OrderByConditionsTest extends TestCase {
     Function<CollectionsQL.Student, String> function = CollectionsQL.Student::getName;

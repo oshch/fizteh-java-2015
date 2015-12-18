@@ -5,7 +5,6 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.runners.MockitoJUnitRunner;
-import org.powermock.modules.junit4.PowerMockRunner;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -14,7 +13,6 @@ import ru.fizteh.fivt.students.oshch.collectionquery.Aggregators.Aggregator;
 import ru.fizteh.fivt.students.oshch.collectionquery.CollectionsQL.Student;
 
 import static org.junit.Assert.assertEquals;
-//import static ru.fizteh.fivt.students.oshch.collectionquery.Aggregates.*;
 import static ru.fizteh.fivt.students.oshch.collectionquery.CollectionsQL.Student.student;
 import static ru.fizteh.fivt.students.oshch.collectionquery.Sources.list;
 

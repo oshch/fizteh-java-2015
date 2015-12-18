@@ -1,5 +1,6 @@
 package ru.fizteh.fivt.students.oshch.collectionquery;
 
+
 import org.mockito.internal.util.collections.Sets;
 
 import java.util.ArrayList;

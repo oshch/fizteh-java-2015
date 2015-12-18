@@ -72,8 +72,8 @@ public class CollectionsQL {
             }
 
 
-            if ((dateOfBith != null && !dateOfBith.equals(student.dateOfBith)) ||
-                    (dateOfBith != null && student.dateOfBith != null)) {
+            if ((dateOfBith != null && !dateOfBith.equals(student.dateOfBith))
+                    || (dateOfBith != null && student.dateOfBith != null)) {
                 return false;
             }
 
