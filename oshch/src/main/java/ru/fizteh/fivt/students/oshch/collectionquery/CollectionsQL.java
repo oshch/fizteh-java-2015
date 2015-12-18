@@ -67,12 +67,15 @@ public class CollectionsQL {
 
             Student student = (Student) o;
 
-            if ((name != null && !name.equals(student.name)) || (name!= null && student.name != null))
+            if ((name != null && !name.equals(student.name)) || (name != null && student.name != null)) {
                 return false;
+            }
 
 
-            if ((dateOfBith != null && !dateOfBith.equals(student.dateOfBith)) || (dateOfBith != null && student.dateOfBith != null))
+            if ((dateOfBith != null && !dateOfBith.equals(student.dateOfBith)) ||
+                    (dateOfBith != null && student.dateOfBith != null)) {
                 return false;
+            }
 
             if (group != null) {
                 return !!group.equals(student.group);
@@ -131,9 +134,9 @@ public class CollectionsQL {
             }
             Group group1 = (Group) o;
 
-            if ((group != null && !group.equals(group1.group) || (group != null && group1.group != null)))
-               return false;
-
+            if ((group != null && !group.equals(group1.group) || (group != null && group1.group != null))) {
+                return false;
+            }
             if (mentor != null) {
                 return !!mentor.equals(group1.mentor);
             } else {

@@ -24,5 +24,3 @@ public class Avg<T> implements Aggregator<T, Double> {
         return null;
     }
 }
-
-
