@@ -33,24 +33,35 @@ public class DatabaseService {
     }
 
     private Class<?> aClass;
+    private Table annotation;
+    private String table;
+    private Field[] fields;
+    private List<String> columns;
 
     public DatabaseService(Class<?> ac) {
         aClass = ac;
-    }
+        annotation = aClass.getAnnotation(Table.class);
+        table = annotation.name();
+        fields = aClass.getDeclaredFields();
 
-    public final <T> void insert(T entity) throws IllegalAccessException {
-
-        Table annotation = aClass.getAnnotation(Table.class);
-        String table = annotation.name();
-        Field[] fields = aClass.getDeclaredFields();
-
-        List<String> columns = new ArrayList<>();
-        List<Object> values = new ArrayList<>();
+        columns = new ArrayList<>();
 
         for (Field field : fields) {
             Column column = field.getAnnotation(Column.class);
             if (column != null) {
                 columns.add(column.name());
+            }
+        }
+    }
+
+    public final <T> void insert(T entity) throws IllegalAccessException {
+
+        List<Object> values = new ArrayList<>();
+
+        for (Field field : fields) {
+            Column column = field.getAnnotation(Column.class);
+            if (column != null) {
+
                 values.add(field.get(entity));
             }
         }
@@ -70,6 +81,7 @@ public class DatabaseService {
                     "INSERT INTO " + table + " (" + columnsLine + ") "
                             + "VALUES (" + valuesLine + ")");
             int updatedLines = statement.executeUpdate();
+            statement.close();
             System.out.println("Updated: " + updatedLines);
 
         } catch (SQLException sqle) {
@@ -79,10 +91,6 @@ public class DatabaseService {
 
     public final <T> List<T> queryForAll() {
         List<T> answers = new ArrayList<>();
-        Table annotation = aClass.getAnnotation(Table.class);
-        String table = annotation.name();
-        Field[] fields = aClass.getDeclaredFields();
-        List<String> columns = new ArrayList<>();
 
         for (Field field : fields) {
             Column column = field.getAnnotation(Column.class);
@@ -107,12 +115,12 @@ public class DatabaseService {
                 }
                 answers.add(answer);
             }
+            statement.close();
         } catch (SQLException sqle) {
             System.out.println("SQLException caught in queryForAll: " + sqle.getMessage());
         } catch (InstantiationException | IllegalAccessException e) {
             e.printStackTrace();
         }
-
         if (answers.size() == 0) {
             return null;
         }
@@ -121,11 +129,7 @@ public class DatabaseService {
 
     public final <T, K> T queryById(K key) {
 
-        Table annotation = aClass.getAnnotation(Table.class);
-        String table = annotation.name();
-        Field[] fields = aClass.getDeclaredFields();
         Field pk = null;
-        List<String> columns = new ArrayList<>();
 
         for (Field field : fields) {
             if (field.isAnnotationPresent(PrimaryKey.class)) {
@@ -159,6 +163,7 @@ public class DatabaseService {
                 }
                 answers.add(answer);
             }
+            preparedStatement.close();
         } catch (SQLException sqle) {
             System.out.println("SQLException caught in queryById: " + sqle.getMessage());
         } catch (InstantiationException | IllegalAccessException e) {
@@ -173,11 +178,8 @@ public class DatabaseService {
     }
 
     public final <T> void update(T entity) {
-        Table annotation = aClass.getAnnotation(Table.class);
-        String table = annotation.name();
-        Field[] fields = aClass.getDeclaredFields();
+
         Field pk = null;
-        List<String> columns = new ArrayList<>();
         String keyStr = new String();
 
         for (Field field : fields) {
@@ -205,6 +207,7 @@ public class DatabaseService {
             preparedStatement.setString(1, keyStr);
             preparedStatement.executeUpdate();
             insert(entity);
+            preparedStatement.close();
         } catch (SQLException sqle) {
             System.out.println("SQLException caught in update: " + sqle.getMessage());
         } catch (IllegalAccessException e) {
@@ -213,12 +216,8 @@ public class DatabaseService {
     }
 
     public final <T> void delete(T entity) {
-        Table annotation = aClass.getAnnotation(Table.class);
-        String table = annotation.name();
-        Field[] fields = aClass.getDeclaredFields();
+
         Field pk = null;
-        List<String> columns = new ArrayList<>();
-        Object key = null;
         String keyStr = new String();
 
         for (Field field : fields) {
@@ -246,15 +245,13 @@ public class DatabaseService {
                     connection.prepareStatement("DELETE FROM " + table + " WHERE " + pkFieldName + " = ?");
             preparedStatement.setString(1, keyToFind);
             preparedStatement.executeUpdate();
+            preparedStatement.close();
         } catch (SQLException sqle) {
             System.out.println("SQLException caught in delete: " + sqle.getMessage());
         }
     }
 
     public final void createTable() {
-        Table annotation = aClass.getAnnotation(Table.class);
-        String table = annotation.name();
-        Field[] fields = aClass.getDeclaredFields();
         List<String> columnsWithTypes = new ArrayList<>();
         String typename;
         for (Field field : fields) {
@@ -293,21 +290,20 @@ public class DatabaseService {
             statement = connection.prepareStatement(
                     "CREATE TABLE " + table + " (" + columnsLine + "); ");
             statement.executeUpdate();
-
+            statement.close();
         } catch (SQLException sqle) {
             System.out.println("Exception caught in create: " + sqle.getMessage());
         }
     }
 
     public final void dropTable() {
-        Table annotation = aClass.getAnnotation(Table.class);
         String table = annotation.name();
 
         try (Connection connection = DriverManager.getConnection("jdbc:h2:./miniORM2")) {
 
             PreparedStatement statement = connection.prepareStatement("DROP TABLE IF EXISTS" + table + ";");
             statement.executeUpdate();
-
+            statement.close();
         } catch (SQLException sqle) {
             System.out.println("Exception caught in drop: " + sqle.getMessage());
         }

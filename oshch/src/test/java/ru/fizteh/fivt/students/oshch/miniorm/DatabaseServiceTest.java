@@ -9,7 +9,7 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 public class DatabaseServiceTest {
-    /*@DatabaseService.Table(name = "users")
+    @DatabaseService.Table(name = "users")
     public static class User {
 
         @DatabaseService.Column(name = "name")
@@ -90,6 +90,7 @@ public class DatabaseServiceTest {
             for (int i = 0; i < correctUsers.size(); ++i) {
                 assertEquals(correctUsers.get(i).toString(), users.get(i).toString());
             }
+            statement.close();
         }
     }
 
@@ -109,6 +110,7 @@ public class DatabaseServiceTest {
             User answer = dbs.queryById(key);
             assertNotNull(answer);
             assertEquals("User{name='Lena', age=300}", answer.toString());
+            statement.close();
         }
     }
 
@@ -136,6 +138,7 @@ public class DatabaseServiceTest {
             for (int i = 0; i < users.size(); ++i) {
                 assertEquals(correctUsers.get(i).toString(), users.get(i).toString());
             }
+            statement.close();
         }
     }
 
@@ -160,7 +163,7 @@ public class DatabaseServiceTest {
 
             assertNotNull(answer);
             assertEquals("User{name='Lena', age=305}", answer.toString());
-
+            statement.close();
         }
     }
 
@@ -185,7 +188,7 @@ public class DatabaseServiceTest {
 
             // Должен вернуть null, то есть не найти ничего
             assertNull(answer);
-
+            statement.close();
         }
     }
 
@@ -215,7 +218,7 @@ public class DatabaseServiceTest {
             for (int i = 0; i < users.size(); ++i) {
                 assertEquals(correctUsers.get(i).toString(), users.get(i).toString());
             }
-
+            statement.close();
         }
     }
 
@@ -232,7 +235,8 @@ public class DatabaseServiceTest {
                 tableExists = true;
             }
             assertFalse(tableExists);
+            result.close();
         }
-    }*/
+    }
 
 }
